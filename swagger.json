@@ -1,0 +1,114 @@
+swagger: '2.0'
+info:
+  title: Electricity API
+  description: Implements endpoints to expose Electricity Consumption details to Users
+  version: '1.0'
+  contact:
+    name: Bakthavatchalam Gopalswamy
+    email: gbakthavatchalam@gmail.com
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /data:
+    get:
+      summary: Returns the data for specific filters
+      operationId: fetchData
+      parameters: [
+          {
+            "name": "start",
+            "description": "Start date in the format YYYY-MM-DD",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "count",
+            "description": "No of records to limit",
+            "in": "query",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "resolution",
+            "description": "Indicates daywise or month-wise. Valid values `days`, `months`",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ]
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/data'
+        '401':
+          description: Returned when the user does not provide a valid authentication token.
+          schema:
+            format: string
+      tags:
+        - ElectricityAPI
+  /limits:
+    get:
+      summary: Returns the min/max limits for each user across day and month
+      operationId: showLimit
+      parameters: [
+        ]
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/limit'
+        '401':
+          description: Returned when the user does not provide a valid authentication token.
+          schema:
+            format: string
+      tags:
+        - ElectricityAPI
+definitions:
+  data:
+    type: array
+    items:
+      properties:
+        consumption:
+          type: integer
+          description: consumption in Kwh
+        temperature:
+          type: integer
+          description: temperature
+        timestamp:
+          type: string
+          description: date in format YYYY-MM-DD
+  limit:
+    type: object
+    properties:
+      consumption:
+        type: object
+        properties:
+          minimum:
+            type: integer
+            description: minimum
+          maximum:
+            type: integer
+            description: maximum
+      temperature:
+        type: object
+        properties:
+          minimum:
+            type: integer
+            description: minimum
+          maximum:
+            type: integer
+            description: maximum
+      timestamp:
+        type: object
+        properties:
+          minimum:
+            type: string
+            description: minimum
+          maximum:
+            type: string
+            description: maximum
